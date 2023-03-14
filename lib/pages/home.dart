@@ -29,11 +29,12 @@ class _HomePageState extends State<HomePage> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
+          Color warnaBGTile =
+              (user.gender == "male") ? Colors.blueGrey : Colors.pinkAccent;
           return ListTile(
             title: Text(user.fullName),
-            subtitle: Text(user.email),
-            tileColor:
-                (user.gender == "male") ? Colors.blueGrey : Colors.pinkAccent,
+            subtitle: Text(user.location.timezone.offset),
+            tileColor: warnaBGTile,
           );
         },
       ),
