@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:rests_api/model/user.dart';
+import 'package:rests_api/services/users_api.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +11,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<User> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    ambilData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,8 +30,7 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           final user = users[index];
           return ListTile(
-            title: Text(
-                "${user.name.title}. ${user.name.first} ${user.name.last}"),
+            title: Text(user.fullName),
             subtitle: Text(user.email),
             tileColor:
                 (user.gender == "male") ? Colors.blueGrey : Colors.pinkAccent,
@@ -39,28 +43,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void ambilData() async {
-    print("Data diambil");
-    const String linkAPI = "https://randomuser.me/api/?results=100";
-    final response = await http.get(Uri.parse(linkAPI));
-    final body = response.body;
-    final json = jsonDecode(body);
-    final results = json["results"] as List<dynamic>;
+  Future<void> ambilData() async {
+    final hasil = await UserAPI.ambilData();
     setState(() {
-      users = results.map((e) {
-        final UserName name = UserName(
-            title: e["name"]["title"],
-            first: e["name"]["first"],
-            last: e["name"]["last"]);
-        return User(
-            gender: e["gender"],
-            email: e["email"],
-            phone: e["phone"],
-            cell: e["cell"],
-            nat: e["nat"],
-            name: name);
-      }).toList();
+      users = hasil;
     });
-    print("Pengambilan selesai");
   }
 }
