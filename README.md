@@ -1,6 +1,6 @@
 # rests_api
 
-A new Flutter project.
+Pertama kali pakai API
 
 ## Getting Started
 
